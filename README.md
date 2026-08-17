@@ -17,4 +17,4 @@ malicious agent skill file that smuggles hidden instructions into an LLM agent.
 ---
 
 Static single-page site, served via GitHub Pages on the custom domain.
-Maintained independently. Corrections welcome: hello@sleeperattack.com
+Maintained independently. Corrections and additions welcome via [GitHub Issues](https://github.com/Arlenjim/sleeperattack/issues).
