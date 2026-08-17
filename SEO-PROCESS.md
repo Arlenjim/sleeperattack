@@ -68,11 +68,13 @@ copies qui divergent vaut moins que pas de copie du tout.
 
 ## Template de page (structure de référence)
 
-Une nouvelle page **copie le `index.html` du domaine cible** (pour hériter de ses
-tokens de design : voir `:root` dans `index.html`) et remplit les mêmes
-emplacements, dans cet ordre. Pas de fichier `TEMPLATE.html` séparé : ce serait
-un doublon du `index.html` qui divergerait — la structure ci-dessous fait foi,
-le `index.html` en est l'instance vivante.
+Une nouvelle page reprend la structure ci-dessous et remplit les mêmes
+emplacements, dans cet ordre. **Design partagé via `/style.css`** là où il existe
+(sleeperattack : lier `/style.css` + un `<style>` d'override minimal propre à la
+page) ; sinon copié depuis le `index.html` du domaine (skillinjection, jusqu'à sa
+1re page « vs », qui déclenchera la même extraction). Pas de `TEMPLATE.html`
+séparé : la structure ci-dessous fait foi, `index.html` / `style.css` en sont
+l'instance vivante.
 
 **HEAD**
 - `charset` / `viewport`, `<title>`, `meta description`
@@ -95,11 +97,23 @@ Cible : **1200–2000 mots**, anglais, ton technique neutre. Références arXiv
 **vérifiées** (page existe + titre correspond) — jamais inventées.
 
 ## Notes par page
-- **sleeper attack vs sleeper agents** : la FAQ de sleeperattack.com contient déjà
-  cette disambiguation (réponse développée, faute de page dédiée). Quand la page
-  dédiée « sleeper attack vs sleeper agents » sera construite : **raccourcir** la
-  réponse FAQ à 1–2 phrases et la **lier** vers la page dédiée (anti-cannibalisation).
+- **sleeper attack vs sleeper agents** : page dédiée construite le 2026-08-17 à
+  `/sleeper-attack-vs-sleeper-agents/`. La réponse FAQ Q2 de la home a été
+  raccourcie et **liée** vers elle (réponse courte + lien) — modèle à répliquer
+  pour toute future FAQ qui recoupe une page « vs ».
+
+## Constats de terrain (2026-08-17)
+- **Statut d'indexation** : ne jamais le déduire d'une recherche web du modèle
+  (elle renvoie des sosies, pas un vrai `site:`). Source de vérité = Search
+  Console (Inspection d'URL / Couverture) ou un `site:` exécuté à la main.
+- **sleeperattack.com** : était **déjà indexée** par Google avant les corrections
+  (vérifié `site:` manuel — titre + description affichés). Le « aucune page
+  indexée » de l'audit du 2026-08-17 était faux, dû à un `site:` mal exécuté par
+  l'outil de recherche.
+- **skillinjection.com** : explorée le 2026-07-23 puis « Explorée, actuellement
+  non indexée » — **pas un problème de découverte mais de valeur perçue**. En file
+  de réévaluation depuis le 2026-08-17, sur la version enrichie.
 
 ## Références arXiv (vérifiées le 2026-08-17)
 - skillinjection : `2602.20156`, `2604.03081`, `2603.00195`
-- sleeperattack : `2605.28201`, `2605.15338`, `2604.16548`
+- sleeperattack : `2605.28201`, `2605.15338`, `2604.16548`, `2401.05566` (Sleeper Agents, Anthropic 2024)
