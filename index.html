@@ -110,6 +110,13 @@
   .ref .arrow{float:right;color:var(--faint)}
   .ref:hover .arrow{color:var(--sig)}
 
+  /* faq */
+  .qa{border-top:1px solid var(--line);padding:20px 0}
+  .qa:first-of-type{border-top:0;padding-top:0}
+  .qa h3{margin:0 0 8px;font-family:var(--mono);font-size:15px;font-weight:600;color:#fff}
+  .qa p{margin:0;font-family:var(--serif);font-size:17px;line-height:1.6;color:var(--ink);max-width:64ch}
+  .qa a{color:var(--sig);border-bottom:1px solid var(--line)}
+
   footer{padding:48px 0 76px;color:var(--faint);font-size:12.5px;line-height:1.9}
   footer a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line)}
   footer a:hover{color:var(--sig);border-color:var(--sig)}
@@ -140,6 +147,52 @@
       "dateModified": "2026-08-17",
       "author": { "@type": "Organization", "name": "sleeperattack.com" },
       "publisher": { "@type": "Organization", "name": "sleeperattack.com" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://sleeperattack.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a sleeper attack, in one sentence?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A compromise where a malicious instruction is planted in an LLM agent's long-term memory, lies dormant to avoid detection, and is later triggered by an ordinary, unrelated event." }
+        },
+        {
+          "@type": "Question",
+          "name": "How is a sleeper attack different from Anthropic's “sleeper agents”?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Sleeper agents are deceptive behavior trained into a model that surfaces on a hidden trigger. A sleeper attack plants nothing in the weights — it writes an instruction into an agent's memory after deployment, so it needs no training access and can target an agent that is already running." }
+        },
+        {
+          "@type": "Question",
+          "name": "How is a sleeper attack different from prompt injection?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Prompt injection acts in the moment: the malicious text is in the input the agent is processing right now. A sleeper attack separates cause from effect in time — the instruction is stored and does nothing until a later event recalls it, which is what defeats monitoring tuned to the moment of action." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is a sleeper attack so hard to detect?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Three things stack up: cause and effect are separated in time, the payload lives in memory the agent treats as its own knowledge, and the trigger is a legitimate event the agent is supposed to handle. Blocking the trigger breaks the agent; allowing it fires the payload." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I defend an agent against sleeper attacks?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Gate what is allowed to enter long-term memory, bind each memory's authority to its origin, treat recalled memory as untrusted input rather than fact, and require human confirmation for consequential actions. See Reducing the risk above." }
+        },
+        {
+          "@type": "Question",
+          "name": "Where does the planted instruction come from?",
+          "acceptedAnswer": { "@type": "Answer", "text": "From any content that can reach the agent's memory — a support ticket, an email, a document, a web page, or data returned by a tool. The attacker needs just one write into the store, framed to look like a routine note." }
+        },
+        {
+          "@type": "Question",
+          "name": "What actually triggers a sleeper attack?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A later, ordinary event that makes the agent recall the planted note — a normal user request or a routine piece of data. Nothing about the trigger looks malicious, which is precisely why it works." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does a sleeper attack survive a new session or a model update?",
+          "acceptedAnswer": { "@type": "Answer", "text": "That is its defining trait. Because the instruction lives in long-term memory rather than in a single conversation, it persists across session restarts and context resets, and can outlast model updates — the store is carried forward even when the model is not." }
+        }
+      ]
     }
   ]
 }
@@ -240,8 +293,107 @@
     </div>
   </section>
 
+  <section id="reducing-the-risk">
+    <h2><span class="n">04</span> Reducing the risk</h2>
+    <p class="body">A sleeper attack is not stopped at the moment it fires — by then the trigger looks like ordinary work. The defenses that matter act earlier and lower: control what reaches memory, and refuse to let a recalled note carry more authority than its origin deserves.</p>
+    <div class="phase">
+      <div class="num">1</div>
+      <div>
+        <h3>Gate what enters memory</h3>
+        <p>Not every observation deserves to persist. Validate and constrain what gets written to long-term memory; a plant only works if arbitrary content can reach the store unchecked.</p>
+        <div class="dur">write-time control</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="num">2</div>
+      <div>
+        <h3>Bind memory to its origin</h3>
+        <p>Keep provenance on every stored item and let its authority depend on where it came from. A note whose source is an untrusted support ticket must never be able to authorize a payment.</p>
+        <div class="dur">origin-bound authority</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="num">3</div>
+      <div>
+        <h3>Treat recalled memory as untrusted</h3>
+        <p>When the agent retrieves a note, it should re-examine it, not obey it as its own prior knowledge. The trust boundary has to exist at recall time, not only when the memory was written.</p>
+        <div class="dur">retrieval-time check</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="num">4</div>
+      <div>
+        <h3>Keep a human at the trigger</h3>
+        <p>Because the waking event looks routine, require explicit confirmation for consequential or irreversible actions that depend on a recalled memory. A benign-looking trigger should not fire a payload unattended.</p>
+        <div class="dur">confirmation</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="num">5</div>
+      <div>
+        <h3>Keep memory auditable</h3>
+        <p>Retain append-only logs and memory lineage so that when something goes wrong you can trace which stored item caused it. The gap between planting and action is exactly what makes after-the-fact attribution necessary.</p>
+        <div class="dur">lineage &amp; forensics</div>
+      </div>
+    </div>
+  </section>
+
   <section>
-    <h2><span class="n">04</span> Research &amp; disclosures</h2>
+    <h2><span class="n">05</span> Frequently asked questions</h2>
+
+    <div class="qa">
+      <h3>What is a sleeper attack, in one sentence?</h3>
+      <p>A compromise where a malicious instruction is planted in an LLM agent's long-term memory, lies dormant to avoid detection, and is later triggered by an ordinary, unrelated event.</p>
+    </div>
+
+    <div class="qa">
+      <h3>How is a sleeper attack different from Anthropic's “sleeper agents”?</h3>
+      <p>Sleeper agents are deceptive behavior trained into a model that surfaces on a hidden trigger. A sleeper attack plants nothing in the weights — it writes an instruction into an agent's memory after deployment, so it needs no training access and can target an agent that is already running.</p>
+    </div>
+
+    <div class="qa">
+      <h3>How is a sleeper attack different from prompt injection?</h3>
+      <p>Prompt injection acts in the moment: the malicious text is in the input the agent is processing right now. A sleeper attack separates cause from effect in time — the instruction is stored and does nothing until a later event recalls it, which is what defeats monitoring tuned to the moment of action.</p>
+    </div>
+
+    <div class="qa">
+      <h3>Why is a sleeper attack so hard to detect?</h3>
+      <p>Three things stack up: cause and effect are separated in time, the payload lives in memory the agent treats as its own knowledge, and the trigger is a legitimate event the agent is supposed to handle. Blocking the trigger breaks the agent; allowing it fires the payload.</p>
+    </div>
+
+    <div class="qa">
+      <h3>How do I defend an agent against sleeper attacks?</h3>
+      <p>Gate what is allowed to enter long-term memory, bind each memory's authority to its origin, treat recalled memory as untrusted input rather than fact, and require human confirmation for consequential actions. See <a href="#reducing-the-risk">Reducing the risk</a> above.</p>
+    </div>
+
+    <div class="qa">
+      <h3>Where does the planted instruction come from?</h3>
+      <p>From any content that can reach the agent's memory — a support ticket, an email, a document, a web page, or data returned by a tool. The attacker needs just one write into the store, framed to look like a routine note.</p>
+    </div>
+
+    <div class="qa">
+      <h3>What actually triggers a sleeper attack?</h3>
+      <p>A later, ordinary event that makes the agent recall the planted note — a normal user request or a routine piece of data. Nothing about the trigger looks malicious, which is precisely why it works.</p>
+    </div>
+
+    <div class="qa">
+      <h3>Does a sleeper attack survive a new session or a model update?</h3>
+      <p>That is its defining trait. Because the instruction lives in long-term memory rather than in a single conversation, it persists across session restarts and context resets, and can outlast model updates — the store is carried forward even when the model is not.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">06</span> Related attack classes</h2>
+    <a class="ref" href="https://skillinjection.com/" rel="noopener">
+      <span class="arrow">↗</span>
+      <span class="id">skillinjection.com</span>
+      <div class="ti">Skill injection</div>
+      <div class="me">A malicious agent skill file that smuggles hidden instructions into an LLM agent's execution context.</div>
+    </a>
+  </section>
+
+  <section>
+    <h2><span class="n">07</span> Research &amp; disclosures</h2>
     <a class="ref" href="https://arxiv.org/abs/2605.28201" target="_blank" rel="noopener">
       <span class="arrow">↗</span>
       <span class="id">arXiv:2605.28201</span>
@@ -265,7 +417,7 @@
   <footer>
     <div>sleeperattack.com — a plain-language reference for a developing attack class.</div>
     <div>Maintained independently. Corrections and additions welcome via <a href="https://github.com/Arlenjim/sleeperattack/issues">GitHub Issues</a>.</div>
-    <div>Related attack class: <a href="https://skillinjection.com/">skill injection</a> — a malicious skill file smuggled into an LLM agent.</div>
+    <div>Published 7 July 2026 · Updated 17 August 2026</div>
     <p class="disc">This page describes a defensive security concept for awareness and does not provide exploit code. Terminology in this area is still consolidating; definitions here reflect published research as of 2026 and may evolve.</p>
   </footer>
 
