@@ -26,6 +26,10 @@ copies qui divergent vaut moins que pas de copie du tout.
 - ≥ 3 liens internes entrants vers toute nouvelle page, depuis le **corps** de
   pages thématiquement proches (pas un menu, pas un footer).
 - Ancre = mot-clé cible **exact** de la page qui reçoit le lien.
+- La cible de ≥ 3 s'applique **dès qu'il y a assez de pages proches** pour
+  l'atteindre naturellement. Sur un domaine à 1-2 pages : poser le lien le plus
+  pertinent, **ne jamais fabriquer** de liens artificiels pour cocher la règle,
+  compléter au fur et à mesure que le cluster grandit.
 
 ### Données structurées (JSON-LD)
 - Systématique, adapté au contenu **réel** : `DefinedTerm` (définition),
