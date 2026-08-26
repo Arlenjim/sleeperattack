@@ -114,6 +114,27 @@ Cible : **1200–2000 mots**, anglais, ton technique neutre. Références arXiv
   raccourcie et **liée** vers elle (réponse courte + lien) — modèle à répliquer
   pour toute future FAQ qui recoupe une page « vs ».
 
+## Constats de terrain (2026-08-26)
+- **Indexation** : Bing confirme « Indexée correctement » et « Aucun problème
+  SEO/GEO » pour skillinjection.com. Réindexation demandée sur Google et Bing.
+- **Liens retour** : Bing ne remonte **aucune donnée**. Les liens depuis les
+  README GitHub et depuis le champ `homepage` d'un dépôt ne comptent pas comme
+  backlink — constaté, pas supposé. Le maillage posé de cette façon n'a aucune
+  valeur de netlinking.
+  - Cause mesurée le 2026-08-26 sur le README d'une awesome-list rendu par
+    GitHub : sur 505 liens, **tous les liens externes portent `rel="nofollow"`**
+    (arxiv.org, owasp.org, anthropic.com, simonwillison.net…) ; seuls les liens
+    vers `github.com` y échappent. Conséquence : **aucune awesome-list hébergée
+    sur GitHub ne peut fournir un lien suivi.** Y contribuer se justifie pour la
+    découverte et la surface de citation, jamais pour le SEO. Vérifier le
+    `rel` d'un lien avant de compter une place sur une liste comme un backlink.
+- **« AI Performance » de Bing** : affiche 0 citation, mais l'outil ne mesure
+  que les « Microsoft Copilots and Partners ». ChatGPT a cité la page le
+  2026-08-25, avec le lien et les dates publié / mis à jour. **Ne jamais
+  utiliser cet outil comme preuve d'absence de citation** : son périmètre
+  exclut ChatGPT. Une absence dans un outil n'est une absence que dans le
+  périmètre de cet outil.
+
 ## Constats de terrain (2026-08-17)
 - **Statut d'indexation** : ne jamais le déduire d'une recherche web du modèle
   (elle renvoie des sosies, pas un vrai `site:`). Source de vérité = Search
