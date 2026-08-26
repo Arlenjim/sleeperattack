@@ -69,12 +69,14 @@ copies qui divergent vaut moins que pas de copie du tout.
 ## Template de page (structure de référence)
 
 Une nouvelle page reprend la structure ci-dessous et remplit les mêmes
-emplacements, dans cet ordre. **Design partagé via `/style.css`** là où il existe
-(sleeperattack : lier `/style.css` + un `<style>` d'override minimal propre à la
-page) ; sinon copié depuis le `index.html` du domaine (skillinjection, jusqu'à sa
-1re page « vs », qui déclenchera la même extraction). Pas de `TEMPLATE.html`
-séparé : la structure ci-dessous fait foi, `index.html` / `style.css` en sont
-l'instance vivante.
+emplacements, dans cet ordre. **Design partagé via `/style.css`** — extraction
+faite dans les deux domaines : lier `/style.css`, plus un `<style>` d'override
+minimal propre à la page si elle en a besoin. Le `<style>` interne d'un schéma
+SVG reste dans le SVG. Toute extraction de CSS se fait par **déplacement pur**,
+vérifié par script (le bloc extrait doit être identique caractère par
+caractère) ; les règles neuves s'ajoutent en fin de fichier, sous un commentaire
+qui les délimite. Pas de `TEMPLATE.html` séparé : la structure ci-dessous fait
+foi, `index.html` / `style.css` en sont l'instance vivante.
 
 **HEAD**
 - `charset` / `viewport`, `<title>`, `meta description`
@@ -87,16 +89,26 @@ l'instance vivante.
 - `.bar` : bandeau statut
 - `<header>` : `.eyebrow`, `<h1>` (contient le terme), `.lede`
 - `.def` : définition en une phrase
-- Sections `<h2>` numérotées :
+- Sections `<h2>` numérotées. Tronc commun, obligatoire :
   `01` What it is · `02` Mechanism / lifecycle (schéma SVG) · `03` How it differs /
   why it's hard · `04` Reducing the risk · `05` FAQ (visible) · `06` Related attack
   classes (carte `.ref` vers le domaine frère) · `07` Research & disclosures
+- Deux emplacements **optionnels** s'insèrent quand le sujet les justifie et
+  décalent la numérotation : « pourquoi la défense évidente échoue » après `03`,
+  et un mapping vers un référentiel (OWASP) après « Reducing the risk ». Ne pas
+  les créer pour remplir : ils ne valent que si la page a quelque chose que la
+  littérature ne dit pas déjà mieux ailleurs.
 - `<footer>` : mainteneur, lien **GitHub Issues**, dates publiée / mise à jour, disclaimer
 
 Cible : **1200–2000 mots**, anglais, ton technique neutre. Références arXiv
 **vérifiées** (page existe + titre correspond) — jamais inventées.
 
 ## Notes par page
+- **skillinjection (home)** : va de `01` à `09` depuis le 2026-08-26 — elle
+  utilise les deux emplacements optionnels (`04` why scanners miss it, `06`
+  OWASP AST10). Les CVE Claude Code qu'elle cite portent sur la configuration
+  de l'agent, pas sur des skills : elles sont présentées comme la même
+  frontière de confiance, jamais comme des CVE de skill injection.
 - **sleeper attack vs sleeper agents** : page dédiée construite le 2026-08-17 à
   `/sleeper-attack-vs-sleeper-agents/`. La réponse FAQ Q2 de la home a été
   raccourcie et **liée** vers elle (réponse courte + lien) — modèle à répliquer
@@ -114,6 +126,20 @@ Cible : **1200–2000 mots**, anglais, ton technique neutre. Références arXiv
   non indexée » — **pas un problème de découverte mais de valeur perçue**. En file
   de réévaluation depuis le 2026-08-17, sur la version enrichie.
 
-## Références arXiv (vérifiées le 2026-08-17)
-- skillinjection : `2602.20156`, `2604.03081`, `2603.00195`
-- sleeperattack : `2605.28201`, `2605.15338`, `2604.16548`, `2401.05566` (Sleeper Agents, Anthropic 2024)
+## Références arXiv (vérifiées)
+
+Vérifier **à la source**, jamais depuis la mémoire du modèle ni depuis un
+agrégateur : recouper la page `arxiv.org/abs/<id>` **et** l'API brute
+(`export.arxiv.org/api/query?id_list=<id>`), qui renvoie le titre et la date
+sans passer par un résumé. Même exigence pour une CVE (NVD) et pour un
+référentiel (dépôt officiel du projet).
+
+- skillinjection — vérifiées le **2026-08-26** : `2602.06547`, `2602.14211`,
+  `2602.20156`, `2603.00195`, `2604.03081`, `2606.07943` (POISE),
+  `2608.09732` (ColluSkill), `2608.21929` (SkillBloat)
+- sleeperattack — vérifiées le **2026-08-17** : `2605.28201`, `2605.15338`,
+  `2604.16548`, `2401.05566` (Sleeper Agents, Anthropic 2024)
+
+Un identifiant arXiv porte le mois d'**annonce** (`2603.00195` = mars 2026),
+qui peut différer du mois de soumission renvoyé par l'API (27 février 2026).
+Afficher le mois de l'identifiant : cohérent avec ce que le lecteur voit.
