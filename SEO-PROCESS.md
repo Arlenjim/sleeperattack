@@ -114,6 +114,30 @@ Cible : **1200–2000 mots**, anglais, ton technique neutre. Références arXiv
   raccourcie et **liée** vers elle (réponse courte + lien) — modèle à répliquer
   pour toute future FAQ qui recoupe une page « vs ».
 
+## Contributions externes (PR, listes, commentaires)
+
+- **Aucun superlatif ni comparaison sans vérification contre la source.**
+  « le seul », « le premier », « le plus complet », « le seul à… » : chacun est
+  une affirmation sur le contenu de quelqu'un d'autre, et l'auteur de ce
+  contenu le connaît mieux que nous. Vérifier **dans le document visé**, pas de
+  mémoire, ou retirer la formule.
+  - Cas réel (2026-08-26, PR vers `awesome-agent-skills-security`) : le
+    brouillon affirmait que notre entrée CVE serait « the only entry backed by
+    assigned CVEs ». Contrôle par script du README complet : aucun identifiant
+    `CVE-AAAA-NNNNN` listé, mais **deux entrées revendiquent des CVE en
+    agrégat** — l'une 67, l'autre 9. La phrase était fausse d'un facteur 30 et
+    se serait vue au premier coup d'œil du mainteneur. Retirée avant envoi.
+- **Divulgation d'appartenance en tête**, pas en note de bas de page, dès qu'on
+  propose un lien vers un domaine qu'on possède. Un mainteneur qui la découvre
+  après coup, c'est un rejet et une réputation grillée dans un milieu étroit.
+- **Ne jamais proposer une correction non vérifiée.** Sur 3 liens cassés
+  investigués, 1 était introuvable et 1 n'était pas du type annoncé. Annoncer
+  l'ampleur d'un problème en n'en traitant qu'un échantillon prouvé vaut mieux
+  que livrer des corrections plausibles : une correction fausse coûte plus cher
+  que pas de correction. Dire explicitement que l'échantillon est délibéré.
+- **Relire les règles du dépôt cible avant d'écrire** (`CONTRIBUTING.md`,
+  format d'entrée, critères de rejet), et se placer dans leur format exact.
+
 ## Constats de terrain (2026-08-26)
 - **Indexation** : Bing confirme « Indexée correctement » et « Aucun problème
   SEO/GEO » pour skillinjection.com. Réindexation demandée sur Google et Bing.
