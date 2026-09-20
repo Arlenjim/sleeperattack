@@ -19,7 +19,7 @@ copies qui divergent vaut moins que pas de copie du tout.
 ### Sitemap
 - `sitemap.xml` mis à jour à CHAQUE publication ou changement d'URL, `lastmod` =
   date du jour. C'est le point qui casse en silence quand on publie en dur.
-- Aujourd'hui manuel (1 URL/domaine). Dès que le nombre de pages grandit :
+- Aujourd'hui manuel (2 URL par domaine). Dès que le nombre de pages grandit :
   générer le sitemap au build et documenter la commande ici.
 
 ### Maillage interne
@@ -116,6 +116,15 @@ Cible : **1200–2000 mots**, anglais, ton technique neutre. Références arXiv
   OWASP AST10). Les CVE Claude Code qu'elle cite portent sur la configuration
   de l'agent, pas sur des skills : elles sont présentées comme la même
   frontière de confiance, jamais comme des CVE de skill injection.
+- **skill scanner evasion** : page dédiée construite le 2026-09-20 à
+  `/skill-scanner-evasion/`, mot-clé « skill scanner evasion ». Deux tableaux
+  (attaques : taux d'évasion ; détecteurs : taux de détection), chaque chiffre
+  tel que rapporté dans le résumé arXiv, avec la définition de succès du papier
+  à côté — rien de reproduit, et la page le dit. Rôle : l'« original technical
+  analysis » qui rend le domaine liable (route 1 du plan backlinks). Deux liens
+  depuis le corps de la home (sections 04 et 09), ancre exacte ; règles CSS
+  `.cmp` ajoutées en fin de `style.css` (non répliquées côté sleeperattack, qui
+  a les siennes). 2 201 mots, au-dessus de la cible : ce sont les tableaux.
 - **sleeper attack vs sleeper agents** : page dédiée construite le 2026-08-17 à
   `/sleeper-attack-vs-sleeper-agents/`. La réponse FAQ Q2 de la home a été
   raccourcie et **liée** vers elle (réponse courte + lien) — modèle à répliquer
@@ -173,6 +182,12 @@ Cible : **1200–2000 mots**, anglais, ton technique neutre. Références arXiv
   du compte (« Vous n'avez pas accès à cette propriété »). Rien n'y est lisible
   tant que Damien ne l'a pas validée — bouton « Valider la propriété », action
   de compte, jamais cliquée par Claude.
+- **Rendu sans l'extension Chrome** : quand elle se déconnecte (Chrome fermé
+  côté Damien), la vérification de rendu se fait avec Chrome en headless :
+  `chrome.exe --headless=new --screenshot=<png> --window-size=1200,<h>
+  --user-data-dir=<tmp> <url>` sur un serveur local (`python -m http.server`),
+  puis lecture du PNG. Utilisé le 2026-09-20 pour `/skill-scanner-evasion/`,
+  et il a attrapé un défaut de tableau (colonne en `nowrap`).
 - **Saisie dans Search Console** : les champs Angular Material ignorent la
   frappe simulée du navigateur ; utiliser `form_input` sur la référence du
   champ, puis vérifier visuellement la valeur avant d'envoyer.
@@ -252,6 +267,12 @@ référentiel (dépôt officiel du projet).
   (SkillSecurer). Billet Trail of Bits du 2026-06-03 vérifié à la source :
   citation reprise mot pour mot ; périmètre réel = ClawHub, scanner Cisco,
   skills.sh (la page disait « trois marketplaces », corrigé).
+- skillinjection `/skill-scanner-evasion/` — vérifiées le **2026-09-20** (page
+  `abs` + API, résumés complets lus) : `2602.06547`, `2606.07943`, `2606.15899`,
+  `2606.18198`, `2606.19191`, `2606.23416`, `2607.02357`, `2607.25619`,
+  `2608.03485`, `2608.08468`, `2608.09732`, `2608.16246`, `2609.12001`,
+  `2609.14079`. Chaque chiffre du tableau vient du résumé ; quand le résumé ne
+  donne pas de taux, la ligne le dit (SkillCamo, PhantomSkill).
 - sleeperattack — vérifiées le **2026-08-17** : `2605.28201`, `2605.15338`,
   `2604.16548`, `2401.05566` (Sleeper Agents, Anthropic 2024)
 
