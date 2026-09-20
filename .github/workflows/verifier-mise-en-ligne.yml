@@ -1,0 +1,68 @@
+name: Verifier que le site en ligne est a jour
+
+on:
+  push:
+    branches: [main]
+    # Un push qui ne touche que de la documentation ne change pas le site :
+    # inutile de verifier, cela ferait du bruit pour rien.
+    paths-ignore:
+      - '**.md'
+
+# Si deux pushs se suivent de pres, seul le dernier est verifie.
+concurrency:
+  group: verifier-mise-en-ligne
+  cancel-in-progress: true
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Comparer le site en ligne au contenu de ce commit
+        run: |
+          SITE="https://$(cat CNAME)"
+          FICHIERS=$(git ls-files '*.html' '*.css' '*.xml')
+
+          # GitHub Pages met un moment a publier. On reessaie pendant 10 minutes
+          # avant de crier a l'erreur : "lent" n'est pas "perime".
+          for TENTATIVE in $(seq 1 20); do
+            ABSENTS=""   # le site ne rend pas le fichier (404, erreur reseau...)
+            PERIMES=""   # le site rend le fichier, mais dans une version ancienne
+
+            for F in $FICHIERS; do
+              # On lit le contenu DU COMMIT (git show), pas le fichier sur le
+              # disque : selon la machine, git peut reecrire les fins de ligne
+              # a la copie, ce qui ferait echouer la comparaison sans qu'aucun
+              # contenu n'ait change. Pages sert le contenu du commit.
+              ATTENDU=$(git show "HEAD:$F" | md5sum | cut -d' ' -f1)
+              CODE=$(curl -sS -L --max-time 30 -o servi.tmp -w '%{http_code}' "$SITE/$F" || echo 000)
+
+              if [ "$CODE" != "200" ]; then
+                ABSENTS="$ABSENTS $F(HTTP $CODE)"
+              elif [ "$ATTENDU" != "$(md5sum servi.tmp | cut -d' ' -f1)" ]; then
+                PERIMES="$PERIMES $F"
+              fi
+            done
+
+            if [ -z "$ABSENTS$PERIMES" ]; then
+              echo "OK : tous les fichiers en ligne correspondent a ce commit."
+              exit 0
+            fi
+
+            echo "Tentative $TENTATIVE/20 :"
+            if [ -n "$ABSENTS" ]; then echo "  introuvables en ligne :$ABSENTS"; fi
+            if [ -n "$PERIMES" ]; then echo "  encore en version ancienne :$PERIMES"; fi
+            sleep 30
+          done
+
+          echo "ECHEC apres 10 minutes."
+          if [ -n "$ABSENTS" ]; then
+            echo "  INTROUVABLES - le site ne rend pas ces fichiers :$ABSENTS"
+            echo "  (un HTTP 404 persistant n'est pas un retard de publication :"
+            echo "   verifier le nom du fichier, son chemin, ou la config Pages)"
+          fi
+          if [ -n "$PERIMES" ]; then
+            echo "  PERIMES - le site rend une version plus ancienne :$PERIMES"
+          fi
+          exit 1
