@@ -158,6 +158,26 @@ Cible : **1200–2000 mots**, anglais, ton technique neutre. Références arXiv
   utiliser cet outil comme preuve d'absence de citation** : son périmètre
   exclut ChatGPT. Une absence dans un outil n'est une absence que dans le
   périmètre de cet outil.
+- **Un HTTP 200 ne prouve pas qu'un site est à jour.** GitHub Pages continue de
+  servir la **dernière version construite avec succès** : quand un build échoue,
+  le site reste en ligne avec du contenu périmé et répond 200 sur toutes ses
+  URL. Un code de statut ne prouve donc que l'existence du site, jamais sa
+  fraîcheur — et c'est précisément le cas où l'on croit avoir vérifié.
+  - Preuve de fraîcheur = comparer le **contenu servi** au **contenu du commit**,
+    fichier par fichier (empreinte de `index.html`, `style.css`, `sitemap.xml`).
+    Vérifié ainsi le 2026-08-26 sur les deux domaines : 3/3 identiques.
+  - **Une croix rouge sur « pages build and deployment » ne dit rien de l'état
+    du site.** Ce workflow est **généré par GitHub** (chemin `dynamic/pages/…`,
+    aucun fichier dans `.github/`) : ni éditable, ni supprimable sans désactiver
+    Pages. Sa dernière étape, `report-build-status`, ne fait qu'envoyer une
+    statistique à `pages/telemetry` ; un `HTTP 503` sur cet appel fait échouer le
+    run **après** un déploiement déjà réussi — log du 2026-08-17, simultané sur
+    les deux dépôts : `CONCLUSION: success` puis 503, exit 1.
+  - Second mode d'échec, distinct : lors d'une panne Actions (2026-08-26,
+    `major_outage`), les jobs ne démarrent pas et sont tués à 15 min pile
+    (`startup_failure`). Là le déploiement n'a **pas** eu lieu — d'où la
+    nécessité d'un contrôle qui distingue les deux, au lieu de s'habituer aux
+    croix rouges.
 
 ## Constats de terrain (2026-08-17)
 - **Statut d'indexation** : ne jamais le déduire d'une recherche web du modèle
