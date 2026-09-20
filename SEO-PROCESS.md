@@ -170,8 +170,11 @@ Cible : **1200–2000 mots**, anglais, ton technique neutre. Références arXiv
   fichier répond 200 en `application/xml`. Cause probable : soumis le jour
   même de sa création, avant la fin du déploiement Pages, et jamais re-tenté.
   Google **ne réessaie pas** un sitemap en échec : re-soumettre après chaque
-  publication et contrôler « Dernière lecture ». Re-soumis le 2026-09-20 ;
-  l'état rouge persiste tant que la relecture n'a pas eu lieu.
+  publication et contrôler « Dernière lecture ». Re-soumis le 2026-09-20 à
+  ~18 h : **lu par Google dans l'heure** (« Opération effectuée », type
+  « Sitemap », 1 page découverte). La re-soumission suffit donc ; le blocage
+  venait bien de l'absence de nouvelle tentative. Re-soumis une seconde fois le
+  même soir après l'ajout de `/skill-scanner-evasion/` (2 URL).
 - **Les builds Pages sont restés bloqués 25 jours** après la panne Actions du
   26/08, sur les deux dépôts (`building`, puis `errored`). Déblocage sans
   commit vide : `gh api -X POST repos/<owner>/<repo>/pages/builds` → `built` en
