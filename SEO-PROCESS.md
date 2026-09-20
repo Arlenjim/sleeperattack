@@ -52,9 +52,16 @@ copies qui divergent vaut moins que pas de copie du tout.
   page dédiée est propriétaire de la requête. Voir « Notes par page ».
 
 ### Après chaque publication
-- ⚠️ Demander l'indexation de l'URL dans **Google Search Console** (propriété
-  « Préfixe d'URL »). Claude ne peut pas le faire → à rappeler en fin de rapport
-  à chaque publication.
+- Preuve de mise en ligne d'abord : empreintes servi == commit (contrôle
+  `verifier-mise-en-ligne.yml` vert, ou comparaison manuelle). Jamais de
+  demande d'indexation sur un contenu non prouvé en ligne.
+- ⚠️ Dans **Google Search Console** (propriété « Préfixe d'URL ») : demander
+  l'indexation de l'URL **et** re-soumettre `sitemap.xml`, puis vérifier dans
+  les jours qui suivent que la colonne « Dernière lecture » se remplit.
+  Faisable par Claude via l'extension Chrome, avec le compte Google de Damien
+  déjà connecté : lecture des rapports en autonomie ; clics « Envoyer » et
+  « Demander une indexation » uniquement sur GO explicite de Damien. Sans
+  Chrome : à rappeler en fin de rapport.
 
 ## Checklist avant commit
 - [ ] title < 60 · meta description < 155 · un seul `<h1>`
@@ -64,7 +71,7 @@ copies qui divergent vaut moins que pas de copie du tout.
 - [ ] ≥ 3 liens internes entrants (ancre = mot-clé) vers toute nouvelle page
 - [ ] `sitemap.xml` à jour (URL + `lastmod` du jour)
 - [ ] rendu vérifié (capture ou navigateur), pas seulement le code
-- [ ] rappel Search Console noté pour Damien
+- [ ] Search Console : indexation demandée + sitemap re-soumis (ou rappel noté pour Damien)
 
 ## Template de page (structure de référence)
 
@@ -138,6 +145,43 @@ Cible : **1200–2000 mots**, anglais, ton technique neutre. Références arXiv
 - **Relire les règles du dépôt cible avant d'écrire** (`CONTRIBUTING.md`,
   format d'entrée, critères de rejet), et se placer dans leur format exact.
 
+## Constats de terrain (2026-09-20)
+- **skillinjection.com a été indexée puis éjectée.** Rapport Pages : dans
+  l'index du ~16/08 au ~03/09, puis retour à « Explorée, actuellement non
+  indexée ». Dernière exploration 19/09, récupération réussie, indexation
+  autorisée, canonique correcte : **aucun blocage technique**, un jugement de
+  valeur. Performances sur 3 mois : 236 impressions, 6 clics, position moyenne
+  7,2 ; requête principale « skill injection » (49 impressions, 2 clics) ; les
+  autres requêtes visibles sont des noms de papiers (« skillinject »,
+  « skillject »). Réponse du 2026-09-20 : 7 papiers 2026 vérifiés ajoutés,
+  section 04 étendue, sitemap re-soumis, indexation redemandée. À relire dans
+  2–3 semaines : rapport Pages, et « Dernière lecture » du sitemap.
+- **Le sitemap n'avait jamais été lu par Google.** Soumis le 17/08, état
+  « Impossible de récupérer le sitemap », 0 page découverte, alors que le
+  fichier répond 200 en `application/xml`. Cause probable : soumis le jour
+  même de sa création, avant la fin du déploiement Pages, et jamais re-tenté.
+  Google **ne réessaie pas** un sitemap en échec : re-soumettre après chaque
+  publication et contrôler « Dernière lecture ». Re-soumis le 2026-09-20 ;
+  l'état rouge persiste tant que la relecture n'a pas eu lieu.
+- **Les builds Pages sont restés bloqués 25 jours** après la panne Actions du
+  26/08, sur les deux dépôts (`building`, puis `errored`). Déblocage sans
+  commit vide : `gh api -X POST repos/<owner>/<repo>/pages/builds` → `built` en
+  moins d'une minute. Le contrôle `verifier-mise-en-ligne.yml` a passé son
+  premier run réel en `success` sur les deux dépôts, puis a validé le
+  déploiement du contenu (3/3 empreintes).
+- **sleeperattack.com n'est pas une propriété validée** dans la Search Console
+  du compte (« Vous n'avez pas accès à cette propriété »). Rien n'y est lisible
+  tant que Damien ne l'a pas validée — bouton « Valider la propriété », action
+  de compte, jamais cliquée par Claude.
+- **Saisie dans Search Console** : les champs Angular Material ignorent la
+  frappe simulée du navigateur ; utiliser `form_input` sur la référence du
+  champ, puis vérifier visuellement la valeur avant d'envoyer.
+- Page skillinjection à 2 273 mots (corps hors SVG/scripts ; 1 897 avant),
+  au-delà de la cible 1 200–2 000 : l'excédent est fait de lignes de
+  référence, pas de prose. Gardé tel quel. Proposition (Claude, non tranchée
+  par Damien) : ne plus ajouter d'entrée en section 09 sans en retirer une, ou
+  ouvrir une page dédiée à la recherche.
+
 ## Constats de terrain (2026-08-26)
 - **Indexation** : Bing confirme « Indexée correctement » et « Aucun problème
   SEO/GEO » pour skillinjection.com. Réindexation demandée sur Google et Bing.
@@ -202,6 +246,12 @@ référentiel (dépôt officiel du projet).
 - skillinjection — vérifiées le **2026-08-26** : `2602.06547`, `2602.14211`,
   `2602.20156`, `2603.00195`, `2604.03081`, `2606.07943` (POISE),
   `2608.09732` (ColluSkill), `2608.21929` (SkillBloat)
+- skillinjection — vérifiées le **2026-09-20** : `2606.18198` (SkillCamo),
+  `2607.02357` (SkillCloak / SkillDetonate), `2607.13987` (SkillSec-Eval),
+  `2608.16246` (CompoSkill), `2609.07360`, `2609.12001`, `2609.14079`
+  (SkillSecurer). Billet Trail of Bits du 2026-06-03 vérifié à la source :
+  citation reprise mot pour mot ; périmètre réel = ClawHub, scanner Cisco,
+  skills.sh (la page disait « trois marketplaces », corrigé).
 - sleeperattack — vérifiées le **2026-08-17** : `2605.28201`, `2605.15338`,
   `2604.16548`, `2401.05566` (Sleeper Agents, Anthropic 2024)
 
